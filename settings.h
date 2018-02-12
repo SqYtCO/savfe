@@ -30,18 +30,18 @@ struct Configuration
 
 Configuration read_configuration();
 
-// adds path "path" to list in file "filedirectorylist"
+// adds path "path" to list in file FILES::LIST_NAME
 // "path" will be passed to "to_real_absolute", so it is unimportant if "path" is absolute or relative
 // can throw "No_path_Or_Directory_Exception" and "Already_On_The_List_Exception"
 void add_path(std::experimental::filesystem::path path);
 
-// removes path "path" from list in file "filedirectorylist"
+// removes path "path" from list in file FILES::LIST_NAME
 // creates temporary file "filedirectorylist-2"
 // "path" will be passed to "to_real_absolute", so it is unimportant if "path" is absolute or relative
 // can throw "No_path_Or_Directory_Exception" and "Not_On_The_List_Exception"
 void remove_path(const std::experimental::filesystem::path& path);
 
-// removes all deleted and not anymore existing paths from list in file "filedirectorylist"
+// removes all deleted and not anymore existing paths from list in file FILES::LIST_NAME
 // creates temporary file "filedirectorylist-2"
 // return-value is the number of removed paths
 int remove_not_existing_paths();

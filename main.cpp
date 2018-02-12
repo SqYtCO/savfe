@@ -12,27 +12,18 @@
 
 int main(int args, char* argv[])
 {
+	// stores parameters
 	Data params;
 
 	try
 	{
 		params = analyze_parameters(args, argv);
 	}
-	catch(const char* err)
-	{
-		std::cerr << err << '\n';
-
-		return -1;
-	}
 	catch(const Exception& exc)
 	{
 		try
 		{
 			exc.exec();
-		}
-		catch(const Quit_Exception& quit)
-		{
-			return quit.return_value;
 		}
 		catch(const Exception& exc)
 		{
@@ -42,7 +33,7 @@ int main(int args, char* argv[])
 	}
 	catch(...)
 	{
-		log("unknown parameter error", Log_Type::Fatale_Error);
+		log(LOG_MSG::UNKNOWN_PARAMETER_ERROR, Log_Type::Fatale_Error);
 	}
 
 	try
@@ -52,10 +43,6 @@ int main(int args, char* argv[])
 			try
 			{
 				terminal();
-			}
-			catch(const Quit_Exception& quit)
-			{
-				return quit.return_value;
 			}
 			catch(const Exception& exc)
 			{
@@ -69,8 +56,8 @@ int main(int args, char* argv[])
 			}
 			catch(...)
 			{
-				std::cerr << "\n\nFatale Terminal Error!\nPlease contact the developer!\n\n";
-				log("unknown terminal error", Log_Type::Fatale_Error);
+				std::cerr << MSG::FATALE_TERMINAL_ERROR;
+				log(LOG_MSG::UNKNOWN_TERMINAL_ERROR, Log_Type::Fatale_Error);
 			}
 		}
 		if(!params.destination.empty())
@@ -106,14 +93,10 @@ int main(int args, char* argv[])
 			}
 			catch(...)
 			{
-				std::cerr << "\n\nFatale Running Error!\nPlease contact the developer!\n\n";
-				log("run error", Log_Type::Fatale_Error);
+				std::cerr << MSG::FATALE_RUNNING_ERROR;
+				log(LOG_MSG::RUN_ERROR, Log_Type::Fatale_Error);
 			}
 		}
-	}
-	catch(const Quit_Exception& quit)
-	{
-		return quit.return_value;
 	}
 	catch(const Exception& exc)
 	{

@@ -3,10 +3,10 @@
 
 enum Log_Type
 {
-    Info = 'I',
-    Debug = 'D',
-    Error = 'E',
-    Fatale_Error = 'F'
+	Info = 'I',
+	Debug = 'D',
+	Error = 'E',
+	Fatale_Error = 'F'
 };
 
 void log(const char* data, Log_Type type = Log_Type::Info);

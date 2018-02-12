@@ -7,27 +7,18 @@
 
 void terminal()
 {
-    while(true)
-    {
-        std::string input;
-        std::cout << CONST::TERMINAL_PROMT;
-        std::getline(std::cin, input);
-        try
-        {
-            analyze_input(input);
-        }
-        catch(const Exception& exc)
-        {
-            exc.exec();
-        }
-        catch(const std::exception& exc)
-        {
-            std::cerr << exc.what();
-            log(exc.what());
-        }
-		catch(const char* msg)
+	while(true)
+	{
+		std::string input;
+		std::cout << CONST::TERMINAL_PROMT;
+		std::getline(std::cin, input);
+		try
 		{
-			std::cerr << msg << '\n';
+			analyze_input(input);
 		}
-    }
+		catch(const Exception& exc)
+		{
+			exc.exec();
+		}
+	}
 }

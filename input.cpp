@@ -5,66 +5,63 @@
 
 void analyze_input(const std::string& input)
 {
-    std::istringstream iss(input);
-    std::vector<std::string> words
-    {
-        std::istream_iterator<std::string>{iss},
-        std::istream_iterator<std::string>{ }
-    };
+	std::istringstream iss(input);
+	std::vector<std::string> words { std::istream_iterator<std::string>{iss},
+		std::istream_iterator<std::string>{ } };
 
-    for(std::size_t i = 0; i < words.size(); ++i)
-    {
-        if(words[i] == "R" || words[i] == "run")
-        {
-            throw Run_Exception();
-        }
-        else if(words[i] == "quit" || words[i] == "q" || words[i] == "exit")
-        {
-            throw Quit_Exception();
-        }
-        else if(words[i] == "add" || words[i] == "a")
-        {
-			// erase first element ("add")
-            words.erase(words.begin());
+	for(std::size_t i = 0; i < words.size(); ++i)
+	{
+		if(words[i] == "R" || words[i] == "run" || words[i] == "u" || words[i] == "update")
+		{
+			throw Run_Exception();
+		}
+		else if(words[i] == "quit" || words[i] == "q" || words[i] == "exit")
+		{
+			throw Quit_Exception();
+		}
+		else if(words[i] == "add" || words[i] == "a")
+		{
+			// erase first element (="add")
+			words.erase(words.begin());
 			if(words.empty())
-				throw(MSG::NO_FILE_TO_ADD_SPECIFIED_MSG);
+				throw Error_Exception(MSG::NO_FILE_TO_ADD_SPECIFIED);
 			else
-            	throw Add_Exception(words);
-        }
-        else if(words[i] == "remove" || words[i] == "r" || words[i] == "x")
-        {
-			// erase first element ("remove")
-            words.erase(words.begin());
+				throw Add_Exception(words);
+		}
+		else if(words[i] == "remove" || words[i] == "r" || words[i] == "x")
+		{
+			// erase first element (="remove")
+			words.erase(words.begin());
 			if(words.empty())
-				throw(MSG::NO_FILE_TO_REMOVE_SPECIFIED_MSG);
-            else
+				throw Error_Exception(MSG::NO_FILE_TO_REMOVE_SPECIFIED);
+			else
 				throw Remove_Exception(words);
-        }
+		}
 		else if((words[i] == "d" || words[i] == "destination"))
 		{
-			// erase first element ("destination")
+			// erase first element (="destination")
 			words.erase(words.begin());
 			throw Destination_Exception(words.back());
 		}
-        else if(words[i] == "list" || words[i] == "l")
-        {
-            throw List_Exception();
-        }
-        else if(words[i] == "clear" && words.size() > i + 1)
-        {
+		else if(words[i] == "list" || words[i] == "l")
+		{
+			throw List_Exception();
+		}
+		else if(words[i] == "clear" && words.size() > i + 1)
+		{
 			if(words[++i] == "list")
-            	throw Clear_Exception();
-        }
-        else if(words[i] == "help" || words[i] == "h" || words[i] == "?")
-        {
-            throw Help_Exception();
-        }
+				throw Clear_Exception();
+		}
+		else if(words[i] == "help" || words[i] == "h" || words[i] == "?")
+		{
+			throw Help_Exception();
+		}
 		else if(words[i] == "log")
 		{
 			throw Log_Exception();
 		}
 		else if(words[i] == "show" && words.size() > i + 1)
-        {
+		{
 			++i;
 			if(words[i] == "config")
 				throw Config_Exception();
@@ -88,14 +85,18 @@ void analyze_input(const std::string& input)
 				}
 			}
 		}
-        else if(words[i] == "")
-        {
+		else if(words[i] == "check")
+		{
+			throw Check_Exception();
+		}
+		else if(words[i] == "")
+		{
 			// skip empty lines
-            continue;
-        }
-        else
-        {
-            throw Invalid_Input_Exception(words[i]);
-        }
-    }
+			continue;
+		}
+		else
+		{
+			throw Invalid_Input_Exception(words[i]);
+		}
+	}
 }
