@@ -1,4 +1,5 @@
-#include "operations.h"
+#include "dir_functions.h"
+#include <string>
 
 // replaces all ".." and "." with correct absolute path
 // "spath" have to be an correct absolute path

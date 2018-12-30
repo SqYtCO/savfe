@@ -1,5 +1,5 @@
-#ifndef OPERATIONS_H
-#define OPERATIONS_H
+#ifndef DIR_FUNCTIONS_H
+#define DIR_FUNCTIONS_H
 
 #include <experimental/filesystem>
 
@@ -24,4 +24,4 @@ bool is_parent_directory(const std::experimental::filesystem::path& parent, cons
 // "parent" and "sub" will be passed to "to_real_absolute", so it is unimportant if they are absolute or relative
 bool is_parent_directory(const std::experimental::filesystem::path& parent, const std::experimental::filesystem::path& sub);
 
-#endif // OPERATIONS_H
+#endif // DIR_FUNCTIONS_H
