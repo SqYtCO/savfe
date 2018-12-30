@@ -1,5 +1,18 @@
 #include "input.h"
-#include "exceptions.h"
+#include "exceptions/run_exception.h"
+#include "exceptions/quit_exception.h"
+#include "exceptions/error_exception.h"
+#include "exceptions/add_exception.h"
+#include "exceptions/remove_exception.h"
+#include "exceptions/destination_exception.h"
+#include "exceptions/list_exception.h"
+#include "exceptions/clear_exception.h"
+#include "exceptions/help_exception.h"
+#include "exceptions/log_exception.h"
+#include "exceptions/config_exception.h"
+#include "exceptions/behavior_exception.h"
+#include "exceptions/invalid_input_exception.h"
+#include "exceptions/check_exception.h"
 #include <sstream>
 #include <iterator>
 
@@ -60,30 +73,49 @@ void analyze_input(const std::string& input)
 		{
 			throw Log_Exception();
 		}
-		else if(words[i] == "show" && words.size() > i + 1)
-		{
-			++i;
-			if(words[i] == "config")
-				throw Config_Exception();
-			else if(words[i] == "list")
-				throw List_Exception();
-			else if(words[i] == "log")
-				throw Log_Exception();
-		}
 		else if(words[i] == "config")
+		{
+			throw Config_Exception();
+		}
+		else if(words[i] == "behavior")
 		{
 			Configuration::Already_Existing_Behavior aeb;
 			Configuration::Symlinks_Behavior sb;
 
 			if(++i < words.size())
 			{
-				aeb = static_cast<Configuration::Already_Existing_Behavior>(std::stoul(words[i]));
+				try
+				{
+					int temp = std::stoul(words[i]);
+					if(temp == 0 || temp == 1 || temp == 2 || temp == 4)
+						aeb = static_cast<Configuration::Already_Existing_Behavior>(temp);
+					else
+						throw Error_Exception(MSG::IS_NO_VALID_BEHAVIOR_W_ARG, words[i]);
+				}
+				catch(const std::invalid_argument&)
+				{
+					throw Error_Exception(MSG::IS_NO_VALID_BEHAVIOR_W_ARG, words[i]);
+				}
 				if(++i < words.size())
 				{
-					sb = static_cast<Configuration::Symlinks_Behavior>(std::stoul(words[i]));
+					try
+					{
+						int temp = std::stoul(words[i]);
+						if(temp == 0 || temp == 16 || temp == 32)
+							sb = static_cast<Configuration::Symlinks_Behavior>(temp);
+						else
+							throw Error_Exception(MSG::IS_NO_VALID_BEHAVIOR_W_ARG, words[i]);
+					}
+					catch(const std::invalid_argument&)
+					{
+						throw Error_Exception(MSG::IS_NO_VALID_BEHAVIOR_W_ARG, words[i]);
+					}
+
 					throw Behavior_Exception(aeb, sb);
 				}
 			}
+			else
+				throw Error_Exception(MSG::NEEDS_ARGUMENT_W_ARG, words[i - 1]);
 		}
 		else if(words[i] == "check")
 		{
@@ -96,7 +128,7 @@ void analyze_input(const std::string& input)
 		}
 		else
 		{
-			throw Invalid_Input_Exception(words[i]);
+			throw Error_Exception(MSG::UNKNOWN_COMMAND_W_ARG, words[i], Help_Exception::get_help());
 		}
 	}
 }
