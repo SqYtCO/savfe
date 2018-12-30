@@ -1,23 +1,34 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
+#include <experimental/filesystem>
 #include <vector>
 #include <string>
 #include <chrono>
-#include <experimental/filesystem>
+
+/*
+ * -u / --update / -R / --run
+ * -v / --verbose
+ * -r <dirs/files> / --remove <dirs/files>
+ * -a <dirs/files> / --add <dirs/files>
+ * -d <dir/file> / --destination <dir/file>
+ * -c / --check
+ * --behavior <already-existing-behavior> <symlink-behavior>
+ * -l / --list
+ * --log
+ * --show-config
+ * -? / --help
+*/
 
 struct Data
 {
 	bool verbose {false};
 	std::vector<std::string> removed;
 	std::vector<std::string> added;
-	bool repeating {false};
-	std::chrono::seconds repeating_rate {0};
+	std::experimental::filesystem::path destination;
 	bool update {false};
 	bool terminal {false};
-	bool overwrite_old_files {false};
 	bool check_list {false};
-	std::experimental::filesystem::path destination;
 };
 
 Data analyze_parameters(const int& args, char* argv[]);

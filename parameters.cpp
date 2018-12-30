@@ -1,5 +1,15 @@
 #include "parameters.h"
-#include "exceptions.h"
+#include "exceptions/error_exception.h"
+#include "exceptions/list_exception.h"
+#include "exceptions/help_exception.h"
+#include "exceptions/log_exception.h"
+#include "exceptions/config_exception.h"
+#include "exceptions/behavior_exception.h"
+#include "exceptions/invalid_input_exception.h"
+#include "exceptions/invalid_parameter_exception.h"
+#include "exceptions/parameter_help_exception.h"
+#include "exceptions/no_file_or_directory_exception.h"
+#include "exceptions/check_exception.h"
 #include "messages.h"
 
 Data analyze_parameters(const int& args, char* argv[])
@@ -36,11 +46,9 @@ Data analyze_parameters(const int& args, char* argv[])
 			if(++i < args)
 			{
 				params.destination = argv[i];
-				if(!std::experimental::filesystem::exists(params.destination))
-					throw No_File_Or_Directory_Exception(argv[i]);
 			}
 			else
-				throw Error_Exception(MSG::NO_DIRECTORY_W_ARG);
+				throw Error_Exception(MSG::NEEDS_ARGUMENT_W_ARG, argv[i]);
 		}
 		else if(arg == "-v" || arg == "--verbose")
 		{
@@ -65,10 +73,33 @@ Data analyze_parameters(const int& args, char* argv[])
 
 			if(++i < args)
 			{
-				aeb = static_cast<Configuration::Already_Existing_Behavior>(std::stoul(argv[i]));
+				try
+				{
+					int temp = std::stoul(arg);
+					if(temp == 0 || temp == 1 || temp == 2 || temp == 4)
+						aeb = static_cast<Configuration::Already_Existing_Behavior>(temp);
+					else
+						throw Error_Exception(MSG::IS_NO_VALID_BEHAVIOR_W_ARG, arg);
+				}
+				catch(const std::invalid_argument&)
+				{
+					throw Error_Exception(MSG::IS_NO_VALID_BEHAVIOR_W_ARG, arg);
+				}
 				if(++i < args)
 				{
-					sb = static_cast<Configuration::Symlinks_Behavior>(std::stoul(argv[i]));
+					try
+					{
+						int temp = std::stoul(arg);
+						if(temp == 0 || temp == 16 || temp == 32)
+							sb = static_cast<Configuration::Symlinks_Behavior>(temp);
+						else
+							throw Error_Exception(MSG::IS_NO_VALID_BEHAVIOR_W_ARG, arg);
+					}
+					catch(const std::invalid_argument&)
+					{
+						throw Error_Exception(MSG::IS_NO_VALID_BEHAVIOR_W_ARG, arg);
+					}
+
 					throw Behavior_Exception(aeb, sb);
 				}
 			}
@@ -83,7 +114,7 @@ Data analyze_parameters(const int& args, char* argv[])
 		}
 		else
 		{
-			throw Invalid_Parameter_Exception(arg);
+			throw Error_Exception(MSG::INVALID_ARGUMENT_W_ARG, arg, Parameter_Help_Exception::get_help());
 		}
 	}
 
