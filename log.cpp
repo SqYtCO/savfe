@@ -3,8 +3,6 @@
 #include <fstream>
 #include <chrono>
 #include <ctime>
-#include <cstring>
-#include <iostream>
 
 void log(const char* data, Log_Type type)
 {
