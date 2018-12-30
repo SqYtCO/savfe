@@ -1,8 +1,12 @@
 #include "settings.h"
 #include "constants.h"
 #include "log.h"
-#include "exceptions.h"
-#include "operations.h"
+#include "exceptions/no_directory_exception.h"
+#include "exceptions/error_exception.h"
+#include "exceptions/already_on_the_list_exception.h"
+#include "exceptions/no_file_or_directory_exception.h"
+#include "exceptions/error_exception.h"
+#include "dir_functions.h"
 #include <fstream>
 #include <experimental/filesystem>
 #include <cctype>					// std::isspace
@@ -52,7 +56,7 @@ Configuration read_configuration()
 		}
 	}
 	else
-		throw Failure_Exception("No configuration found!");
+		throw Error_Exception(MSG::NO_CONFIGFILE_FOUND);
 
 	return config;
 }
@@ -139,7 +143,7 @@ void remove_path(const std::experimental::filesystem::path& path)
 
 	// not on the list
 	if(failed)
-		throw Not_On_The_List_Exception(path);
+		throw Error_Exception(MSG::NOT_ON_THE_LIST_W_ARG, path);
 
 	in.close();
 	of.close();
@@ -178,8 +182,9 @@ int remove_not_existing_paths()
 
 void set_destination(const std::experimental::filesystem::path& path)
 {
-	if(!std::experimental::filesystem::exists(path))
-		throw No_File_Or_Directory_Exception(path.string());
+	if(!std::experimental::filesystem::is_directory(path))
+		throw No_Directory_Exception(path);
+
 	else
 	{
 		std::ifstream in(FILES::CONFIG_NAME);
@@ -211,7 +216,23 @@ void set_destination(const std::experimental::filesystem::path& path)
 
 void set_behavior(Configuration::Already_Existing_Behavior aeb, Configuration::Symlinks_Behavior sb)
 {
-	std::ifstream in(FILES::CONFIG_NAME);
+	std::fstream file(FILES::CONFIG_NAME, std::ios::in | std::ios::out);
+	std::string temp;
+
+	while(file)
+	{
+		file >> temp;
+
+		if(temp == "already-existing-behavior:")
+		{
+			file << ' ' << aeb;
+		}
+		else if(temp == "symlink-behavior:")
+		{
+			file << ' ' << sb;
+		}
+	}
+/*	std::ifstream in(FILES::CONFIG_NAME);
 	std::ofstream of("configuration-2");
 	std::string temp;
 
@@ -238,5 +259,5 @@ void set_behavior(Configuration::Already_Existing_Behavior aeb, Configuration::S
 			of.write(temp.c_str(), temp.length());
 	}
 
-	std::experimental::filesystem::rename("configuration-2", FILES::CONFIG_NAME);
+	std::experimental::filesystem::rename("configuration-2", FILES::CONFIG_NAME);*/
 }

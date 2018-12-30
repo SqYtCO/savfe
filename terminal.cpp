@@ -1,6 +1,6 @@
 #include "constants.h"
 #include "input.h"
-#include "exceptions.h"
+#include "exceptions/exceptions.h"
 #include "log.h"
 #include <iostream>
 #include <exception>

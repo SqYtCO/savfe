@@ -2,7 +2,6 @@
 #define SETTINGS_H
 
 #include <string>
-#include <chrono>
 #include <experimental/filesystem>
 
 struct Configuration
@@ -38,7 +37,7 @@ void add_path(std::experimental::filesystem::path path);
 // removes path "path" from list in file FILES::LIST_NAME
 // creates temporary file "filedirectorylist-2"
 // "path" will be passed to "to_real_absolute", so it is unimportant if "path" is absolute or relative
-// can throw "No_path_Or_Directory_Exception" and "Not_On_The_List_Exception"
+// can throw "No_Path_Or_Directory_Exception" and "Error_Exception"
 void remove_path(const std::experimental::filesystem::path& path);
 
 // removes all deleted and not anymore existing paths from list in file FILES::LIST_NAME

@@ -3,7 +3,9 @@
 #include "settings.h"
 #include "run.h"
 #include "log.h"
-#include "exceptions.h"
+#include "exceptions/add_exception.h"
+#include "exceptions/remove_exception.h"
+#include "exceptions/destination_exception.h"
 #include <iostream>
 #include <cstring>
 #include <string>
