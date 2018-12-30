@@ -1,12 +1,15 @@
+#include "run.h"
 #include "log.h"
-#include "exceptions.h"
+#include "constants.h"
+#include "messages.h"
+#include "exceptions/error_exception.h"
 #include <experimental/filesystem>
 #include <fstream>
-#include <vector>
-#include <thread>
-#include <chrono>
 #include <condition_variable>
 #include <atomic>
+#include <chrono>
+#include <thread>
+#include <vector>
 
 void busy_points(std::condition_variable* condition, std::atomic<int>* finished)
 {
@@ -17,6 +20,7 @@ void busy_points(std::condition_variable* condition, std::atomic<int>* finished)
 		for(int i = 0; i < 3; ++i)
 		{
 			std::unique_lock<std::mutex> lock(mut);
+			// interruptable sleep, if interrupted return
 			if(condition->wait_for(lock, std::chrono::milliseconds(600), [&]() { return finished->load(); } ))
 				return;
 			std::cout << " ." << std::flush;
@@ -47,22 +51,24 @@ void run(const Configuration& config, const bool& verbose)
 		}
 	}
 	else
-		throw Failure_Exception("No list found!");
+		throw Error_Exception(MSG::NO_LISTFILE_FOUND);
 
 	for(auto& a : list)
 	{
+		auto begin = std::chrono::high_resolution_clock::now();
 		std::experimental::filesystem::path path(a);
 		std::string final_dest = config.destination;
 
-		std::thread* busy_thread;
-		std::condition_variable condition;
+		std::thread* busy_thread = nullptr;
+		std::condition_variable* condition = nullptr;
 		std::atomic<int> finished;
 		finished = 0;
 
 		if(verbose)
 		{
 			std::cout << a << " -> " << final_dest << std::flush;
-			busy_thread = new std::thread(busy_points, &condition, &finished);
+			condition = new std::condition_variable();
+			busy_thread = new std::thread(busy_points, condition, &finished);
 		}
 
 		if(std::experimental::filesystem::is_directory(path))
@@ -87,8 +93,13 @@ void run(const Configuration& config, const bool& verbose)
 		}
 
 		finished = 1;
-		condition.notify_one();
-		busy_thread->join();
-		std::cout << '\n';
+		if(verbose)
+		{
+			condition->notify_one();
+			busy_thread->join();
+
+			auto end = std::chrono::high_resolution_clock::now();
+			std::cout << " (" << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << ')' << std::endl;
+		}
 	}
 }
