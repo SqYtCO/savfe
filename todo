@@ -1,0 +1,25 @@
+settings.cpp:
+	- remove_path
+		-> add possibility to remove non-existing paths (?)
+
+check_exception.h:
+	- add check_list() and check_destination()
+
+invalid_behavior_exception.h:
+	- add exec()
+
+general:
+	- input: destination
+	- settings file
+	- commando line options
+	- run()
+	- add "*" in paths
+	- add follow links, copy empty directory, etc.
+	- improve config
+	- add "destination" to display destination-path
+	- add "check" / "check list" implementation as parameter and input
+	// - add repetition (parameters: repeating, repeating_rate); replaced by cronjob
+	- redesign set-behavior in paramters (no throw)
+	- if no destination set throw error
+	- if destination file throw error
+	- improve remove_path and set_destination in order to prevent a temp. copy
