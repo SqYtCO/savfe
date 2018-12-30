@@ -7,6 +7,8 @@ namespace HELP_TXT
 R"###(Help:
 -u / --update / -R / --run
         run backup
+-v / --verbose
+        enable extended output
 -r <dirs/files> / --remove <dirs/files>
         remove files or directories from backup list
 -a <dirs/files> / --add <dirs/files>
@@ -43,12 +45,12 @@ q / quit / exit
         quit program
 R / run / u / update
         run backup
-a / add <dir/file>
-        add directory or file to backup list
-r / remove / x <dir/file>
-        remove directory or file from backup list
+a / add <dirs/files>
+        add directories and files to backup list
+r / remove / x <dirs/files>
+        remove directories and files from backup list
 d / destination <dir>
-        set destination path to directory
+        set destination path to <dir>
 l / list
         show backup list
 clear list
@@ -57,12 +59,18 @@ check
         check if every path in backup list and the destination path are valid
 log
         show logs
-show config
-        show configurations
-show list
-        show backup list (the same as 'l' or 'list')
-show log
-        show logs (the same as 'log')
+config
+        show configuration
+behavior <already-existing-behavior> <symlink-behavior>
+        set configuration of save-behavior if the file exists already:
+            0: cancel save process and report an error
+            1: keep old saved files
+            2: overwrite old saved files
+            4: update old saved files (default)
+        and a symlink is found:
+            0: follow symlink
+            16: copy symlink as symlink
+            32: skip symlinks (default)
 )###";
 }
 
