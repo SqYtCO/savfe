@@ -8,6 +8,12 @@ check_exception.h:
 invalid_behavior_exception.h:
 	- add exec()
 
+invalid_parameter_exception.h:
+	- Invalid_Parameter_Exception::exec requires new quit-mechanism (without Quit_Exception)
+
+run.cpp:
+	- implement ignore list algorithm
+
 general:
 	- input: destination
 	- settings file
@@ -23,3 +29,8 @@ general:
 	- if no destination set throw error
 	- if destination file throw error
 	- improve remove_path and set_destination in order to prevent a temp. copy
+	- add options "(don't) create index file" and "read-able timestamp"
+	- set temp. file name of config/log file as constant
+
+bugs:
+	- new files in already added directory (problem in find_node())

@@ -1,7 +1,7 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include <experimental/filesystem>
+#include <filesystem>
 #include <vector>
 #include <string>
 #include <chrono>
@@ -20,17 +20,28 @@
  * -? / --help
 */
 
-struct Data
+struct Parameter_Data
 {
 	bool verbose {false};
 	std::vector<std::string> removed;
 	std::vector<std::string> added;
-	std::experimental::filesystem::path destination;
+	std::vector<std::string> ignored;
+	std::filesystem::path destination;
 	bool update {false};
 	bool terminal {false};
 	bool check_list {false};
 };
 
-Data analyze_parameters(const int& args, char* argv[]);
+// throws:
+// Error_Exception
+// List_Exception
+// Log_Exception
+// Behavior_Exception
+// Config_Exception
+// Parameter_Help_Exception
+//
+//
+//
+Parameter_Data analyze_parameters(const int& args, char* argv[]);
 
 #endif // PARAMETERS_H

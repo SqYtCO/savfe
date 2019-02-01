@@ -3,7 +3,9 @@
 #include "settings.h"
 #include "run.h"
 #include "log.h"
+#include "exceptions/quit_exception.h"
 #include "exceptions/add_exception.h"
+#include "exceptions/ignore_exception.h"
 #include "exceptions/remove_exception.h"
 #include "exceptions/destination_exception.h"
 #include <iostream>
@@ -14,8 +16,8 @@
 
 int main(int args, char* argv[])
 {
-	// stores parameters
-	Data params;
+	// store parameters
+	Parameter_Data params;
 
 	try
 	{
@@ -23,19 +25,12 @@ int main(int args, char* argv[])
 	}
 	catch(const Exception& exc)
 	{
-		try
-		{
-			exc.exec();
-		}
-		catch(const Exception& exc)
-		{
-			log(exc.which(), Log_Type::Error);
-			std::cerr << '\n' << exc.which() << '\n';
-		}
+		exc.exec();
 	}
 	catch(...)
 	{
 		log(LOG_MSG::UNKNOWN_PARAMETER_ERROR, Log_Type::Fatale_Error);
+		return -1;
 	}
 
 	try
@@ -46,15 +41,19 @@ int main(int args, char* argv[])
 			{
 				terminal();
 			}
+			catch(const Quit_Exception& exc)
+			{
+				return exc.return_value;
+			}
 			catch(const Exception& exc)
 			{
 				log(exc.which(), Log_Type::Error);
 				std::cerr << '\n' << exc.which() << '\n';
 			}
-			catch(const std::exception& e)
+			catch(const std::exception& exc)
 			{
-				log(e.what());
-				std::cerr << e.what() << '\n';
+				log(exc.what(), Log_Type::Error);
+				std::cerr << exc.what() << '\n';
 			}
 			catch(...)
 			{
@@ -67,15 +66,11 @@ int main(int args, char* argv[])
 			Destination_Exception(params.destination).exec();
 		}
 		if(!params.added.empty())
-		{
-			for(const auto& a : params.added)
-				Add_Exception(a).exec();
-		}
+			Add_Exception(params.added).exec();
+		if(!params.ignored.empty())
+			Ignore_Exception(params.ignored);
 		if(!params.removed.empty())
-		{
-			for(const auto& a : params.removed)
-				Remove_Exception(a).exec();
-		}
+			Remove_Exception(params.removed).exec();
 		if(params.update)
 		{
 			try
@@ -88,10 +83,10 @@ int main(int args, char* argv[])
 			{
 				exc.exec();
 			}
-			catch(const std::exception& e)
+			catch(const std::exception& exc)
 			{
-				log(e.what());
-				std::cerr << e.what() << '\n';
+				log(exc.what());
+				std::cerr << exc.what() << '\n';
 			}
 			catch(...)
 			{

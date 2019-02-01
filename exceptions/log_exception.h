@@ -1,17 +1,18 @@
 #ifndef LOG_EXCEPTION_H
 #define LOG_EXCEPTION_H
 
-#include "exceptions.h"
+#include "exception.h"
 #include "error_exception.h"
 #include "../constants.h"
 #include "../messages.h"
+#include "../log.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 
 struct Log_Exception : public Exception
 {
-	virtual void exec() const override
+	virtual void exec() const noexcept override
 	{
 		try
 		{
@@ -33,9 +34,13 @@ struct Log_Exception : public Exception
 		{
 			exc.exec();
 		}
+		catch(const std::exception& exc)
+		{
+			log(exc.what(), Log_Type::Error);
+		}
 	}
 
-	virtual const char* which() const override
+	virtual const char* which() const noexcept override
 	{
 		return "Log_Exception";
 	}

@@ -13,6 +13,8 @@ R"###(Help:
         remove files or directories from backup list
 -a <dirs/files> / --add <dirs/files>
         add files or directories to backup list
+-i <dirs/files> / --ignore <dirs/files>
+        add files or directories to ignore list
 -d <dir/file> / --destination <dir/file>
         set backup location
 -l / --list
@@ -47,14 +49,16 @@ R / run / u / update
         run backup
 a / add <dirs/files>
         add directories and files to backup list
+i / ignore <dirs/files>
+        add directories and files to ignore list
 r / remove / x <dirs/files>
         remove directories and files from backup list
 d / destination <dir>
         set destination path to <dir>
 l / list
         show backup list
-clear list
-        clear full list (can not be undone!)
+clear
+        clear backup list (can not be undone!)
 check
         check if every path in backup list and the destination path are valid
 log

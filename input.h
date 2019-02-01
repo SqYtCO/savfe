@@ -8,6 +8,7 @@
  * q / quit / exit
  * R / run / u / update
  * a / add <dirs/files>
+ * i / ignore <dirs/files>
  * r / remove / x <dirs/files>
  * d / destination <dir>
  * l / list

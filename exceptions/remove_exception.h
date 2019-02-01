@@ -1,7 +1,7 @@
 #ifndef REMOVE_EXCEPTION_H
 #define REMOVE_EXCEPTION_H
 
-#include "exceptions.h"
+#include "exception.h"
 #include "success_exception.h"
 #include "../messages.h"
 #include "../settings.h"
@@ -13,9 +13,8 @@ struct Remove_Exception : public Exception
 {
 	Remove_Exception(const std::string& file) { files_to_remove.push_back(file); }
 	Remove_Exception(const std::vector<std::string>& files) : files_to_remove(files) {	}
-	std::vector<std::string> files_to_remove;
 
-	virtual void exec() const override
+	virtual void exec() const noexcept override
 	{
 		for(const auto& a : files_to_remove)
 		{
@@ -29,13 +28,20 @@ struct Remove_Exception : public Exception
 			{
 				exc.exec();
 			}
+			catch(const std::exception& exc)
+			{
+				log(exc.what(), Log_Type::Error);
+			}
 		}
 	}
 
-	virtual const char* which() const override
+	virtual const char* which() const noexcept override
 	{
 		return "Remove_Exception";
 	}
+
+private:
+	std::vector<std::string> files_to_remove;
 };
 
 #endif // REMOVE_EXCEPTION_H

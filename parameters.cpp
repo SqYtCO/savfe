@@ -12,9 +12,9 @@
 #include "exceptions/check_exception.h"
 #include "messages.h"
 
-Data analyze_parameters(const int& args, char* argv[])
+Parameter_Data analyze_parameters(const int& args, char* argv[])
 {
-	Data params;
+	Parameter_Data params;
 
 	if(args < 2)
 		params.terminal = true;
@@ -40,6 +40,13 @@ Data analyze_parameters(const int& args, char* argv[])
 				params.added.push_back(argv[i]);
 			else
 				throw Error_Exception(MSG::NO_FILE_TO_ADD_SPECIFIED);
+		}
+		else if(arg == "-i" || arg == "--ignore")
+		{
+			if(++i < args)
+				params.ignored.push_back(argv[i]);
+			else
+				throw Error_Exception(MSG::NO_FILE_TO_IGNORE_SPECIFIED);
 		}
 		else if(arg == "-d" || arg == "--destination")
 		{

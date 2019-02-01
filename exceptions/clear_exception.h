@@ -1,7 +1,7 @@
 #ifndef CLEAR_EXCEPTION_H
 #define CLEAR_EXCEPTION_H
 
-#include "exceptions.h"
+#include "exception.h"
 #include "../constants.h"
 #include "../messages.h"
 #include "../log.h"
@@ -12,7 +12,7 @@
 
 struct Clear_Exception : public Exception
 {
-	virtual void exec() const override
+	virtual void exec() const noexcept override
 	{
 		std::string choice;
 		std::cout << MSG::CLEAR_LIST_REQUEST_ANSWER;
@@ -29,7 +29,7 @@ struct Clear_Exception : public Exception
 			std::cerr << MSG::OPERATION_CANCELED << '\n';
 	}
 
-	virtual const char* which() const override
+	virtual const char* which() const noexcept override
 	{
 		return "Clear_Exception";
 	}

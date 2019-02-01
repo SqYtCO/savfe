@@ -1,29 +1,31 @@
 #ifndef RUN_EXCEPTION_H
 #define RUN_EXCEPTION_H
 
-#include "exceptions.h"
+#include "exception.h"
 #include "../run.h"
 #include "../settings.h"
+#include "../log.h"
 
 struct Run_Exception : public Exception
 {
-	virtual void exec() const override
+	virtual void exec() const noexcept override
 	{
-		Configuration config;
 		try
 		{
-			config = read_configuration();
+			// verbose always active
+			run(read_configuration(), true);
 		}
 		catch(const Exception& exc)
 		{
 			exc.exec();
 		}
-
-		// verbose always active
-		run(config, true);
+		catch(const std::exception& exc)
+		{
+			log(exc.what(), Log_Type::Error);
+		}
 	}
 
-	virtual const char* which() const override
+	virtual const char* which() const noexcept override
 	{
 		return "Run_Exception";
 	}

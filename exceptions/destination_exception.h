@@ -1,7 +1,7 @@
 #ifndef DESTINATION_EXCEPTION_H
 #define DESTINATION_EXCEPTION_H
 
-#include "exceptions.h"
+#include "exception.h"
 #include "success_exception.h"
 #include "../messages.h"
 #include "../log.h"
@@ -12,9 +12,8 @@
 struct Destination_Exception : public Exception
 {
 	Destination_Exception(const std::string& dest) : destination(dest) {	}
-	std::string destination;
 
-	virtual void exec() const override
+	virtual void exec() const noexcept override
 	{
 		try
 		{
@@ -26,12 +25,19 @@ struct Destination_Exception : public Exception
 		{
 			exc.exec();
 		}
+		catch(const std::exception& exc)
+		{
+			log(exc.what(), Log_Type::Error);
+		}
 	}
 
-	virtual const char* which() const override
+	virtual const char* which() const noexcept override
 	{
 		return "Destination_Exception";
 	}
+
+private:
+	std::string destination;
 };
 
 #endif // DESTINATION_EXCEPTION_H

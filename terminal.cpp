@@ -1,6 +1,7 @@
 #include "constants.h"
 #include "input.h"
-#include "exceptions/exceptions.h"
+#include "exceptions/exception.h"
+#include "exceptions/quit_exception.h"
 #include "log.h"
 #include <iostream>
 #include <exception>
@@ -15,6 +16,10 @@ void terminal()
 		try
 		{
 			analyze_input(input);
+		}
+		catch(const Quit_Exception& exc)
+		{
+			throw exc;
 		}
 		catch(const Exception& exc)
 		{

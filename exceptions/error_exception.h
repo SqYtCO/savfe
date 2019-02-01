@@ -1,7 +1,7 @@
 #ifndef ERROR_EXCEPTION_H
 #define ERROR_EXCEPTION_H
 
-#include "exceptions.h"
+#include "exception.h"
 #include <iostream>
 #include <string>
 
@@ -11,11 +11,8 @@ struct Error_Exception : public Exception
 		const std::string& arg = std::string(),
 		const std::string& help = std::string())
 		: errormsg(errormsg), arg(arg), help(help){	}
-	std::string errormsg;
-	std::string arg;
-	std::string help;
 
-	virtual void exec() const override
+	virtual void exec() const noexcept override
 	{
 		if(arg.empty())
 			std::cerr << errormsg << '\n';
@@ -25,10 +22,15 @@ struct Error_Exception : public Exception
 			std::cerr << errormsg << arg << '\n' << help;
 	}
 
-	virtual const char* which() const override
+	virtual const char* which() const noexcept override
 	{
 		return "Error_Exception";
 	}
+
+private:
+	std::string errormsg;
+	std::string arg;
+	std::string help;
 };
 
 #endif // ERROR_EXCEPTION_H

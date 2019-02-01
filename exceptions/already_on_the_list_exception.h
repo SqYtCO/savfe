@@ -1,7 +1,7 @@
 #ifndef ALREADY_ON_THE_LIST_EXCEPTION_H
 #define ALREADY_ON_THE_LIST_EXCEPTION_H
 
-#include "exceptions.h"
+#include "exception.h"
 #include "remove_exception.h"
 #include "add_exception.h"
 #include "../messages.h"
@@ -20,11 +20,8 @@ struct Already_On_The_List_Exception : public Exception
 	Already_On_The_List_Exception(const std::string& file,
 		const std::vector<std::string>& sub_dirs_to_be_removed)
 	 		: file(file), sub_dirs(sub_dirs_to_be_removed) {	}
-	std::string file;
-	std::string parent;
-	std::vector<std::string> sub_dirs;
 
-	virtual void exec() const override
+	virtual void exec() const noexcept override
 	{
 		if(!sub_dirs.empty())
 		{
@@ -56,10 +53,15 @@ struct Already_On_The_List_Exception : public Exception
 			 		<< '\"' << parent << '\"' << MSG::ALREADY_ON_THE_LIST_INCLUDED_IN_PARENT_2_W_ARG << '\n';
 	}
 
-	virtual const char* which() const override
+	virtual const char* which() const noexcept override
 	{
 		return "Already_On_The_List_Exception";
 	}
+
+private:
+	std::string file;
+	std::string parent;
+	std::vector<std::string> sub_dirs;
 };
 
 #endif // ALREADY_ON_THE_LIST_EXCEPTION_H

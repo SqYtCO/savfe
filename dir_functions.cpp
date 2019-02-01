@@ -5,13 +5,13 @@
 // "spath" have to be an correct absolute path
 std::string& process_absolute_path(std::string& spath);
 
-std::experimental::filesystem::path to_real_absolute(const std::experimental::filesystem::path& path)
+std::filesystem::path to_real_absolute(const std::filesystem::path& path)
 {
 	std::string spath;			// string of "path"
 
 	// check if "path" is relativ; if so, extend to absolute path
 	if(path.is_relative())
-		spath = std::experimental::filesystem::absolute(path).string();
+		spath = std::filesystem::absolute(path).string();
 	else
 		spath = path.string();
 
@@ -22,10 +22,10 @@ std::experimental::filesystem::path to_real_absolute(const std::experimental::fi
 	}
 
 	// do not add '/' to files
-	if(spath[spath.length() - 1] != '/' && std::experimental::filesystem::is_directory(spath))
+	if(spath[spath.length() - 1] != '/' && std::filesystem::is_directory(spath))
 		spath += '/';
 
-	return std::experimental::filesystem::path(spath);
+	return std::filesystem::path(spath);
 }
 
 std::string& process_absolute_path(std::string& spath)
@@ -54,7 +54,7 @@ std::string& process_absolute_path(std::string& spath)
 	return spath;
 }
 
-bool is_sub_equal_directory(const std::experimental::filesystem::path& sub, const std::experimental::filesystem::path& parent)
+bool is_sub_equal_directory(const std::filesystem::path& sub, const std::filesystem::path& parent)
 {
 	if(sub.string().length() < parent.string().length())
 		return false;
@@ -72,7 +72,7 @@ bool is_sub_equal_directory(const std::experimental::filesystem::path& sub, cons
 	return true;
 }
 
-bool is_sub_directory(const std::experimental::filesystem::path& sub, const std::experimental::filesystem::path& parent)
+bool is_sub_directory(const std::filesystem::path& sub, const std::filesystem::path& parent)
 {
 	if(sub.string().length() == parent.string().length())
 		return false;
@@ -80,7 +80,7 @@ bool is_sub_directory(const std::experimental::filesystem::path& sub, const std:
 		return is_sub_equal_directory(sub, parent);
 }
 
-bool is_parent_equal_directory(const std::experimental::filesystem::path& parent, const std::experimental::filesystem::path& sub)
+bool is_parent_equal_directory(const std::filesystem::path& parent, const std::filesystem::path& sub)
 {
 	if(sub.string().length() < parent.string().length())
 		return false;
@@ -98,7 +98,7 @@ bool is_parent_equal_directory(const std::experimental::filesystem::path& parent
 	return true;
 }
 
-bool is_parent_directory(const std::experimental::filesystem::path& parent, const std::experimental::filesystem::path& sub)
+bool is_parent_directory(const std::filesystem::path& parent, const std::filesystem::path& sub)
 {
 	if(sub.string().length() == parent.string().length())
 		return false;

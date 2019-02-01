@@ -8,7 +8,7 @@
 #include "exceptions/error_exception.h"
 #include "dir_functions.h"
 #include <fstream>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <cctype>					// std::isspace
 #include <string>					// std::stoul
 
@@ -42,17 +42,11 @@ Configuration read_configuration()
 			std::getline(in, value);
 
 			if(type == "destination-path")
-			{
 				config.destination = value;
-			}
 			else if(type == "already-existing-behavior")
-			{
 				config.aeb = static_cast<Configuration::Already_Existing_Behavior>(std::stoul(value));
-			}
 			else if(type == "symlink-behavior")
-			{
 				config.sb = static_cast<Configuration::Symlinks_Behavior>(std::stoul(value));
-			}
 		}
 	}
 	else
@@ -61,9 +55,9 @@ Configuration read_configuration()
 	return config;
 }
 
-void add_path(std::experimental::filesystem::path path)
+void add_path(std::filesystem::path path)
 {
-	if(!std::experimental::filesystem::exists(path))
+	if(!std::filesystem::exists(path))
 		throw No_File_Or_Directory_Exception(path.string());
 	else
 	{
@@ -105,13 +99,13 @@ void add_path(std::experimental::filesystem::path path)
 	}
 }
 
-void remove_path(const std::experimental::filesystem::path& path)
+void remove_path(const std::filesystem::path& path)
 {
-	if(!std::experimental::filesystem::exists(path))
+	if(!std::filesystem::exists(path))
 		throw No_File_Or_Directory_Exception(path);			// path does not exist
 
 	std::ifstream in(FILES::LIST_NAME);
-	std::ofstream of("filedirectorylist-2");		// temp copy of list
+	std::ofstream of(FILES::TEMP_LIST_NAME);		// temp copy of list
 	std::string temp;			// stores single read paths FILES::LIST_NAME
 
 	bool skip = false;		// skip writing (removed files)
@@ -148,13 +142,13 @@ void remove_path(const std::experimental::filesystem::path& path)
 	in.close();
 	of.close();
 
-	std::experimental::filesystem::rename("filedirectorylist-2", FILES::LIST_NAME);  // updates name of copy
+	std::filesystem::rename(FILES::TEMP_LIST_NAME, FILES::LIST_NAME);  // updates name of copy
 }
 
 int remove_not_existing_paths()
 {
 	std::ifstream in(FILES::LIST_NAME);
-	std::ofstream of("filedirectorylist-2");
+	std::ofstream of(FILES::TEMP_LIST_NAME);
 	std::string temp;			// stores single read paths FILES::LIST_NAME
 	int num = 0;					// number of removed paths (return-value)
 
@@ -167,7 +161,7 @@ int remove_not_existing_paths()
 			continue;
 
 		// write to file if path exists; skip all not-existing paths
-		if(std::experimental::filesystem::exists(temp))
+		if(std::filesystem::exists(temp))
 		{
 			++num;
 			temp += '\n';
@@ -175,20 +169,20 @@ int remove_not_existing_paths()
 		}
 	}
 
-	std::experimental::filesystem::rename("filedirectorylist-2", FILES::LIST_NAME);
+	std::filesystem::rename(FILES::TEMP_LIST_NAME, FILES::LIST_NAME);
 
 	return num;
 }
 
-void set_destination(const std::experimental::filesystem::path& path)
+void set_destination(const std::filesystem::path& path)
 {
-	if(!std::experimental::filesystem::is_directory(path))
+	if(!std::filesystem::is_directory(path))
 		throw No_Directory_Exception(path);
 
 	else
 	{
 		std::ifstream in(FILES::CONFIG_NAME);
-		std::ofstream of("configuration-2");
+		std::ofstream of(FILES::TEMP_CONFIG_NAME);
 		std::string temp;
 
 		of.write("destination-path: ", 18);
@@ -211,7 +205,7 @@ void set_destination(const std::experimental::filesystem::path& path)
 		}
 	}
 
-	std::experimental::filesystem::rename("configuration-2", FILES::CONFIG_NAME);
+	std::filesystem::rename(FILES::TEMP_CONFIG_NAME, FILES::CONFIG_NAME);
 }
 
 void set_behavior(Configuration::Already_Existing_Behavior aeb, Configuration::Symlinks_Behavior sb)
@@ -224,13 +218,9 @@ void set_behavior(Configuration::Already_Existing_Behavior aeb, Configuration::S
 		file >> temp;
 
 		if(temp == "already-existing-behavior:")
-		{
 			file << ' ' << aeb;
-		}
 		else if(temp == "symlink-behavior:")
-		{
 			file << ' ' << sb;
-		}
 	}
 /*	std::ifstream in(FILES::CONFIG_NAME);
 	std::ofstream of("configuration-2");
@@ -259,5 +249,49 @@ void set_behavior(Configuration::Already_Existing_Behavior aeb, Configuration::S
 			of.write(temp.c_str(), temp.length());
 	}
 
-	std::experimental::filesystem::rename("configuration-2", FILES::CONFIG_NAME);*/
+	std::filesystem::rename("configuration-2", FILES::CONFIG_NAME);*/
+}
+
+void add_ignore_path(std::filesystem::path path)
+{
+	if(!std::filesystem::exists(path))
+		throw No_File_Or_Directory_Exception(path.string());
+	else
+	{
+		// format "path" correctly
+		path = to_real_absolute(path);
+
+		std::ifstream in(FILES::IGNORELIST_NAME);
+		std::string temp;				// stores single read in paths
+		std::vector<std::string> sub_dirs;		// subdirectories
+								// which are already on the list and have to be removed
+
+		// read in paths and check if the path to add is already on the list;
+		// if so, "Already_On_The_List_Exception" will be thrown
+		while(in)
+		{
+			std::getline(in, temp);
+
+			if(temp == "")
+				break;
+
+			if(temp == path.string())
+				throw Already_On_The_List_Exception(path.string());
+			else
+			{
+				if(is_sub_directory(path, temp))
+					throw Already_On_The_List_Exception(path, temp);
+				else if(is_parent_directory(path, temp))
+					sub_dirs.push_back(temp);
+			}
+		}
+
+		if(!sub_dirs.empty())
+			throw Already_On_The_List_Exception(path.string(), sub_dirs);
+
+		in.close();
+
+		std::ofstream of(FILES::IGNORELIST_NAME, std::ios::app);
+		of << path.string() << '\n';
+	}
 }

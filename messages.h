@@ -5,6 +5,7 @@ namespace MSG
 {
 	constexpr const char* NO_FILE_TO_REMOVE_SPECIFIED = "No file or directory to remove specified";
 	constexpr const char* NO_FILE_TO_ADD_SPECIFIED = "No file or directory to add specified";
+	constexpr const char* NO_FILE_TO_IGNORE_SPECIFIED = "No file or directory to ignore specified";
 	constexpr const char* INVALID_ARGUMENT_W_ARG = "Invalid argument: ";
 	constexpr const char* UNKNOWN_COMMAND_W_ARG = "Unknown command: ";
 	constexpr const char* FATALE_TERMINAL_ERROR = "\n\nFatale Terminal Error!\nPlease contact the developer!\n\n";
@@ -23,14 +24,16 @@ namespace MSG
 	constexpr const char* REMOVE_TO_ADD_SPACES_FOR_LISTING = "       ";
 	constexpr const char* SUCCESSFULLY_REMOVED_W_ARG = " successfully removed!";
 	constexpr const char* SUCCESSFULLY_ADDED_W_ARG = " successfully added!";
+	constexpr const char* SUCCESSFULLY_IGNORED_W_ARG = " successfully ignored!";
 	constexpr const char* OPERATION_CANCELED = "Operation canceled";
 	constexpr const char* CLEAR_LIST_REQUEST_ANSWER = "Clear all directories and files? This action can not be undone! (y/n): ";
 	constexpr const char* SUCCESSFULLY_SET_AS_DESTINAION_W_ARG = " successfully set as destination!";
 	constexpr const char* IS_NO_DIRECTORY_W_ARG = " is no directory!";
 	constexpr const char* NO_CONFIGFILE_FOUND = "No configuration found!";
 	constexpr const char* NO_LOGFILE_FOUND = "No log found!";
-	constexpr const char* NO_LISTFILE_FOUND = "No configuration found!";
+	constexpr const char* NO_LISTFILE_FOUND = "No listfile found!";
 	constexpr const char* IS_NO_VALID_BEHAVIOR_W_ARG = " is no valid behavior code!";
+	constexpr const char* INVALID_INDEXFILE = "Indexfile invalid!";
 }
 
 namespace LOG_MSG
