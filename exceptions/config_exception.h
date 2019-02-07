@@ -9,6 +9,8 @@
 #include <fstream>
 #include <string>
 
+namespace savfe
+{
 struct Config_Exception : public Exception
 {
 	virtual void exec() const noexcept override
@@ -33,5 +35,6 @@ struct Config_Exception : public Exception
 		return "Config_Exception";
 	}
 };
+}
 
 #endif // CONFIG_EXCEPTION_H

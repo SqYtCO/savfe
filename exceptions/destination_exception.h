@@ -9,6 +9,8 @@
 #include <iostream>
 #include <string>
 
+namespace savfe
+{
 struct Destination_Exception : public Exception
 {
 	Destination_Exception(const std::string& dest) : destination(dest) {	}
@@ -17,9 +19,9 @@ struct Destination_Exception : public Exception
 	{
 		try
 		{
-			set_destination(destination);
-			log(("\"" + destination + "\"" + std::string(" set as destination")).c_str());
-			throw Success_Exception(MSG::SUCCESSFULLY_SET_AS_DESTINAION_W_ARG, destination);
+			config.set_destination(path_to_string(format_path(destination)));
+			log(("\"" + config.get_destination() + "\"" + std::string(" set as destination")).c_str(), Log_Type::Info, Log_Output::Fileoutput);
+			throw Success_Exception(MSG::SUCCESSFULLY_SET_AS_DESTINAION_W_ARG, config.get_destination());
 		}
 		catch(const Exception& exc)
 		{
@@ -27,7 +29,7 @@ struct Destination_Exception : public Exception
 		}
 		catch(const std::exception& exc)
 		{
-			log(exc.what(), Log_Type::Error);
+			log(exc.what(), Log_Type::Error, Log_Output::File_And_Stdout);
 		}
 	}
 
@@ -39,5 +41,6 @@ struct Destination_Exception : public Exception
 private:
 	std::string destination;
 };
+}
 
 #endif // DESTINATION_EXCEPTION_H

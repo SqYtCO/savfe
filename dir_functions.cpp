@@ -1,107 +1,86 @@
 #include "dir_functions.h"
 #include <string>
 
-// replaces all ".." and "." with correct absolute path
-// "spath" have to be an correct absolute path
-std::string& process_absolute_path(std::string& spath);
-
-std::filesystem::path to_real_absolute(const std::filesystem::path& path)
+namespace savfe
 {
-	std::string spath;			// string of "path"
+namespace stdfs = std::filesystem;
 
-	// check if "path" is relativ; if so, extend to absolute path
-	if(path.is_relative())
-		spath = std::filesystem::absolute(path).string();
-	else
-		spath = path.string();
+bool is_equal(const std::string& a, const std::string& b)
+{
+	int diff = static_cast<int>(a.length()) - static_cast<int>(b.length());
+	if((diff == 0 || (diff == -1 && b.back() == stdfs::path::preferred_separator)) &&
+		b.find(a) == 0)
+			return true;
+	else if(diff == 1 && a.back() == stdfs::path::preferred_separator &&
+			a.find(b) == 0)
+		return true;
 
-	// check if "/.." or "/." could be in "path"
-	if(spath.find("/.") != std::string::npos)
-	{
-		process_absolute_path(spath);			// substitutes ".." and "." with right absolute path
-	}
-
-	// do not add '/' to files
-	if(spath[spath.length() - 1] != '/' && std::filesystem::is_directory(spath))
-		spath += '/';
-
-	return std::filesystem::path(spath);
+	return false;
 }
 
-std::string& process_absolute_path(std::string& spath)
+bool is_equal(const stdfs::path& a, const stdfs::path& b)
 {
-	std::size_t pos = 0;
-	while((pos = spath.find("/..")) != std::string::npos)
-	{
-		if(spath[pos + 3] == '/')
-		{
-			int last_slash = spath.find_last_of('/', pos - 1);
-			spath.erase(last_slash, pos - last_slash + 3);
-		}
-		else if(pos == spath.length() - 3)
-		{
-			spath.resize(spath.find_last_of('/', spath.length() - 4) + 1);
-		}
-	}
-
-	pos = 0;
-
-	while((pos = spath.find("/.", pos)) != std::string::npos)
-	{
-		spath.erase(pos + 1, 1);
-	}
-
-	return spath;
+	return is_equal(a.string(), b.string());
 }
 
-bool is_sub_equal_directory(const std::filesystem::path& sub, const std::filesystem::path& parent)
+bool is_sub_equal_directory(const std::string& sub, const std::string& parent)
 {
-	if(sub.string().length() < parent.string().length())
+//	if(stdfs::equivalent(sub, parent))
+	if(is_equal(sub, parent))
+		return true;
+
+	if(sub.length() <= parent.length())
 		return false;
 
-	std::size_t pos = 0;
-
-	while(pos < parent.string().length())
-	{
-		if(sub.string()[pos] == parent.string()[pos])
-			++pos;
-		else
-			return false;
-	}
-
-	return true;
+	if(sub.find(parent) == 0 &&
+			(sub[parent.length()] == stdfs::path::preferred_separator ||
+			 parent.back() == stdfs::path::preferred_separator))
+		return true;
+	else
+		return false;
 }
 
-bool is_sub_directory(const std::filesystem::path& sub, const std::filesystem::path& parent)
+bool is_sub_equal_directory(const stdfs::path& sub, const stdfs::path& parent)
 {
-	if(sub.string().length() == parent.string().length())
+	return is_sub_equal_directory(sub.string(), parent.string());
+}
+
+bool is_sub_directory(const std::string& sub, const std::string& parent)
+{
+//	if(stdfs::equivalent(sub, parent))
+	if(is_equal(sub, parent))
 		return false;
 	else
 		return is_sub_equal_directory(sub, parent);
 }
 
-bool is_parent_equal_directory(const std::filesystem::path& parent, const std::filesystem::path& sub)
+bool is_sub_directory(const stdfs::path& sub, const stdfs::path& parent)
 {
-	if(sub.string().length() < parent.string().length())
-		return false;
-
-	std::size_t pos = 0;
-
-	while(pos < parent.string().length())
-	{
-		if(sub.string()[pos] == parent.string()[pos])
-			++pos;
-		else
-			return false;
-	}
-
-	return true;
+	return is_sub_directory(sub.string(), parent.string());
 }
 
-bool is_parent_directory(const std::filesystem::path& parent, const std::filesystem::path& sub)
+bool is_parent_equal_directory(const stdfs::path& parent, const stdfs::path& sub)
 {
-	if(sub.string().length() == parent.string().length())
-		return false;
-	else
-		return is_parent_equal_directory(parent, sub);
+	return is_sub_equal_directory(sub, parent);
+}
+
+bool is_parent_directory(const stdfs::path& parent, const stdfs::path& sub)
+{
+	return is_sub_directory(sub, parent);
+}
+
+stdfs::path format_path(const stdfs::path& path)
+{
+	stdfs::path return_path = stdfs::absolute(path.lexically_normal().make_preferred());
+//	return_path = path_to_string(return_path);
+	return return_path;
+}
+
+std::string path_to_string(const stdfs::path& path)
+{
+	std::string return_string = path.string();
+	if(stdfs::is_directory(path) && return_string.back() != stdfs::path::preferred_separator)
+		return_string += stdfs::path::preferred_separator;
+	return return_string;
+}
 }

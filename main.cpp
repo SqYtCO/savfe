@@ -3,11 +3,10 @@
 #include "settings.h"
 #include "run.h"
 #include "log.h"
-#include "exceptions/quit_exception.h"
 #include "exceptions/add_exception.h"
-#include "exceptions/ignore_exception.h"
 #include "exceptions/remove_exception.h"
 #include "exceptions/destination_exception.h"
+#include "exceptions/check_exception.h"
 #include <iostream>
 #include <cstring>
 #include <string>
@@ -17,87 +16,71 @@
 int main(int args, char* argv[])
 {
 	// store parameters
-	Parameter_Data params;
+	savfe::Parameter_Data params;
 
 	try
 	{
-		params = analyze_parameters(args, argv);
+		params = savfe::analyze_parameters(args, argv);
 	}
-	catch(const Exception& exc)
+	catch(const savfe::Exception& exc)
 	{
 		exc.exec();
 	}
 	catch(...)
 	{
-		log(LOG_MSG::UNKNOWN_PARAMETER_ERROR, Log_Type::Fatale_Error);
+		savfe::log(savfe::LOG_MSG::UNKNOWN_PARAMETER_ERROR, savfe::Log_Type::Fatale_Error, savfe::Log_Output::File_And_Stdout);
 		return -1;
 	}
 
-	try
+	if(!params.destination.empty())
+		savfe::Destination_Exception(params.destination).exec();
+	if(!params.added.empty())
+		savfe::Add_Exception(params.added).exec();
+	if(!params.ignored.empty())
+		savfe::Add_Exception(params.ignored, true);
+	if(!params.removed.empty())
+		savfe::Remove_Exception(params.removed).exec();
+	if(params.check_list)
+		savfe::Check_Exception().exec();
+	if(params.update)
 	{
-		if(params.terminal)
+		try
 		{
-			try
-			{
-				terminal();
-			}
-			catch(const Quit_Exception& exc)
-			{
-				return exc.return_value;
-			}
-			catch(const Exception& exc)
-			{
-				log(exc.which(), Log_Type::Error);
-				std::cerr << '\n' << exc.which() << '\n';
-			}
-			catch(const std::exception& exc)
-			{
-				log(exc.what(), Log_Type::Error);
-				std::cerr << exc.what() << '\n';
-			}
-			catch(...)
-			{
-				std::cerr << MSG::FATALE_TERMINAL_ERROR;
-				log(LOG_MSG::UNKNOWN_TERMINAL_ERROR, Log_Type::Fatale_Error);
-			}
+			savfe::update_save(params.verbose);
 		}
-		if(!params.destination.empty())
+		catch (const savfe::Exception& exc)
 		{
-			Destination_Exception(params.destination).exec();
+			exc.exec();
 		}
-		if(!params.added.empty())
-			Add_Exception(params.added).exec();
-		if(!params.ignored.empty())
-			Ignore_Exception(params.ignored);
-		if(!params.removed.empty())
-			Remove_Exception(params.removed).exec();
-		if(params.update)
+		catch(const std::exception& exc)
 		{
-			try
-			{
-				Configuration config = read_configuration();
-
-				run(config, params.verbose);
-			}
-			catch (const Exception& exc)
-			{
-				exc.exec();
-			}
-			catch(const std::exception& exc)
-			{
-				log(exc.what());
-				std::cerr << exc.what() << '\n';
-			}
-			catch(...)
-			{
-				std::cerr << MSG::FATALE_RUNNING_ERROR;
-				log(LOG_MSG::RUN_ERROR, Log_Type::Fatale_Error);
-			}
+			savfe::log(exc.what(), savfe::Log_Type::Error, savfe::Log_Output::File_And_Stdout);
+		}
+		catch(...)
+		{
+			savfe::log(savfe::MSG::FATALE_RUNNING_ERROR, savfe::Log_Type::Fatale_Error, savfe::Log_Output::Stdout);
+			savfe::log(savfe::LOG_MSG::RUN_ERROR, savfe::Log_Type::Fatale_Error, savfe::Log_Output::Fileoutput);
 		}
 	}
-	catch(const Exception& exc)
+	if(params.terminal)
 	{
-		exc.exec();
+		try
+		{
+			savfe::terminal();
+		}
+		catch(const savfe::Exception& exc)
+		{
+			savfe::log(exc.which(), savfe::Log_Type::Error, savfe::Log_Output::File_And_Stdout);
+		}
+		catch(const std::exception& exc)
+		{
+			savfe::log(exc.what(), savfe::Log_Type::Error, savfe::Log_Output::File_And_Stdout);
+		}
+		catch(...)
+		{
+			savfe::log(savfe::MSG::FATALE_TERMINAL_ERROR, savfe::Log_Type::Fatale_Error, savfe::Log_Output::Stdout);
+			savfe::log(savfe::LOG_MSG::UNKNOWN_TERMINAL_ERROR, savfe::Log_Type::Fatale_Error, savfe::Log_Output::Fileoutput);
+		}
 	}
 
 	return 0;

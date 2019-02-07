@@ -5,6 +5,8 @@
 #include "../messages.h"
 #include <iostream>
 
+namespace savfe
+{
 struct Success_Exception : public Exception
 {
 	Success_Exception(const std::string& successmsg, const std::string& arg = std::string())
@@ -27,5 +29,6 @@ private:
 	std::string arg;
 	std::string successmsg;
 };
+}
 
 #endif // SUCCESS_EXCEPTION_H

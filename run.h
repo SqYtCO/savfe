@@ -3,6 +3,9 @@
 
 #include "settings.h"
 
-void run(const Configuration& config, const bool& verbose = false);
+namespace savfe
+{
+void update_save(const bool& verbose = false);
+}
 
 #endif // RUN_H

@@ -5,13 +5,13 @@
 #include "exceptions/log_exception.h"
 #include "exceptions/config_exception.h"
 #include "exceptions/behavior_exception.h"
-#include "exceptions/invalid_input_exception.h"
-#include "exceptions/invalid_parameter_exception.h"
 #include "exceptions/parameter_help_exception.h"
 #include "exceptions/no_file_or_directory_exception.h"
 #include "exceptions/check_exception.h"
 #include "messages.h"
 
+namespace savfe
+{
 Parameter_Data analyze_parameters(const int& args, char* argv[])
 {
 	Parameter_Data params;
@@ -24,9 +24,7 @@ Parameter_Data analyze_parameters(const int& args, char* argv[])
 		std::string arg(argv[i]);
 
 		if(arg == "-u" || arg == "--update" || arg == "-R" || arg == "--run")
-		{
 			params.update = true;
-		}
 		else if(arg == "-r" || arg == "--remove")
 		{
 			if(++i < args)
@@ -58,21 +56,13 @@ Parameter_Data analyze_parameters(const int& args, char* argv[])
 				throw Error_Exception(MSG::NEEDS_ARGUMENT_W_ARG, argv[i]);
 		}
 		else if(arg == "-v" || arg == "--verbose")
-		{
 			params.verbose = true;
-		}
 		else if(arg == "-l" || arg == "--list")
-		{
 			throw List_Exception();
-		}
 		else if(arg == "-c" || arg == "--check")
-		{
 			params.check_list = true;
-		}
 		else if(arg == "--log")
-		{
 			throw Log_Exception();
-		}
 		else if(arg == "--behavior")
 		{
 			Configuration::Already_Existing_Behavior aeb;
@@ -112,18 +102,13 @@ Parameter_Data analyze_parameters(const int& args, char* argv[])
 			}
 		}
 		else if(arg == "--show-config")
-		{
 			throw Config_Exception();
-		}
 		else if(arg == "--help" || arg == "-?")
-		{
 			throw Parameter_Help_Exception();
-		}
 		else
-		{
 			throw Error_Exception(MSG::INVALID_ARGUMENT_W_ARG, arg, Parameter_Help_Exception::get_help());
-		}
 	}
 
 	return params;
+}
 }

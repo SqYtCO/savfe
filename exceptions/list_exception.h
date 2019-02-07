@@ -7,6 +7,8 @@
 #include <fstream>
 #include <string>
 
+namespace savfe
+{
 struct List_Exception : public Exception
 {
 	virtual void exec() const noexcept override
@@ -36,5 +38,6 @@ struct List_Exception : public Exception
 		return "List_Exception";
 	}
 };
+}
 
 #endif // LIST_EXCEPTION_H

@@ -5,6 +5,8 @@
 #include "../help_texts.h"
 #include <iostream>
 
+namespace savfe
+{
 struct Help_Exception : public Exception
 {
 	virtual void exec() const noexcept override
@@ -22,5 +24,6 @@ struct Help_Exception : public Exception
 		return HELP_TXT::TERMINAL_HELP_TXT;
 	}
 };
+}
 
 #endif // HELP_EXCEPTION_H

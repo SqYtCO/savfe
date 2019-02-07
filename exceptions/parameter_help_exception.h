@@ -5,6 +5,8 @@
 #include "../help_texts.h"
 #include <iostream>
 
+namespace savfe
+{
 struct Parameter_Help_Exception : public Exception
 {
 	virtual void exec() const noexcept override
@@ -22,5 +24,6 @@ struct Parameter_Help_Exception : public Exception
 		return HELP_TXT::PARAMETER_HELP_TXT;
 	}
 };
+}
 
 #endif // PARAMETER_HELP_EXCEPTION_H

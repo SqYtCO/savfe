@@ -6,6 +6,8 @@
 #include "../settings.h"
 #include "../log.h"
 
+namespace savfe
+{
 struct Run_Exception : public Exception
 {
 	virtual void exec() const noexcept override
@@ -13,7 +15,7 @@ struct Run_Exception : public Exception
 		try
 		{
 			// verbose always active
-			run(read_configuration(), true);
+			update_save(config.get_verbose());
 		}
 		catch(const Exception& exc)
 		{
@@ -21,7 +23,7 @@ struct Run_Exception : public Exception
 		}
 		catch(const std::exception& exc)
 		{
-			log(exc.what(), Log_Type::Error);
+			log(exc.what(), Log_Type::Fatale_Error, Log_Output::File_And_Stdout);
 		}
 	}
 
@@ -30,5 +32,6 @@ struct Run_Exception : public Exception
 		return "Run_Exception";
 	}
 };
+}
 
 #endif // RUN_EXCEPTION_H

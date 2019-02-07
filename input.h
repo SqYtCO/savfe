@@ -3,6 +3,8 @@
 
 #include <string>
 
+namespace savfe
+{
 /* input:
  * h / help / ?
  * q / quit / exit
@@ -18,7 +20,6 @@
  * config
  * behavior <already-existing-behavior> <symlink-behavior>
  */
-
-void analyze_input(const std::string& input);
-
+bool analyze_input(const std::string& input);
+}
 #endif // INPUT_H

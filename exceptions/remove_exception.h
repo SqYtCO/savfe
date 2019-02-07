@@ -9,6 +9,8 @@
 #include <vector>
 #include <string>
 
+namespace savfe
+{
 struct Remove_Exception : public Exception
 {
 	Remove_Exception(const std::string& file) { files_to_remove.push_back(file); }
@@ -21,7 +23,7 @@ struct Remove_Exception : public Exception
 			try
 			{
 				remove_path(a);
-				log(("\"" + a + "\"" + std::string(" removed")).c_str());
+				log(("\"" + a + "\"" + std::string(" removed")).c_str(), Log_Type::Info, Log_Output::Fileoutput);
 				throw Success_Exception(MSG::SUCCESSFULLY_REMOVED_W_ARG, a);
 			}
 			catch (const Exception& exc)
@@ -30,7 +32,7 @@ struct Remove_Exception : public Exception
 			}
 			catch(const std::exception& exc)
 			{
-				log(exc.what(), Log_Type::Error);
+				log(exc.what(), Log_Type::Error, Log_Output::File_And_Stdout);
 			}
 		}
 	}
@@ -43,5 +45,6 @@ struct Remove_Exception : public Exception
 private:
 	std::vector<std::string> files_to_remove;
 };
+}
 
 #endif // REMOVE_EXCEPTION_H

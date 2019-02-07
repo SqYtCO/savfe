@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 
+namespace savfe
+{
 struct Error_Exception : public Exception
 {
 	Error_Exception(const std::string& errormsg,
@@ -32,5 +34,6 @@ private:
 	std::string arg;
 	std::string help;
 };
+}
 
 #endif // ERROR_EXCEPTION_H

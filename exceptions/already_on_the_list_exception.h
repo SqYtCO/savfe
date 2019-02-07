@@ -12,6 +12,8 @@
 #include <limits>		// std::numeric_limits
 #include <cctype>		// std::tolower
 
+namespace savfe
+{
 struct Already_On_The_List_Exception : public Exception
 {
 	Already_On_The_List_Exception(const std::string& file) : file(file) {	}
@@ -63,5 +65,6 @@ private:
 	std::string parent;
 	std::vector<std::string> sub_dirs;
 };
+}
 
 #endif // ALREADY_ON_THE_LIST_EXCEPTION_H

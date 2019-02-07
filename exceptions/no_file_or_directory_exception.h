@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 
+namespace savfe
+{
 struct No_File_Or_Directory_Exception : public Exception
 {
 	No_File_Or_Directory_Exception(const std::string& file) { files.push_back(file); }
@@ -26,5 +28,6 @@ struct No_File_Or_Directory_Exception : public Exception
 private:
 	std::vector<std::string> files;
 };
+}
 
 #endif // NO_FILE_ORDIRECTORY_EXCEPTION_H

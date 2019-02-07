@@ -4,6 +4,8 @@
 #include "exception.h"
 #include "../settings.h"
 
+namespace savfe
+{
 struct Behavior_Exception : public Exception
 {
 	Behavior_Exception(Configuration::Already_Existing_Behavior aeb,
@@ -13,7 +15,7 @@ struct Behavior_Exception : public Exception
 	{
 		if((sb == 0 || sb == 16 || sb == 32) &&
 			(aeb == 0 || aeb == 1 || aeb == 2 || aeb == 4))
-				set_behavior(aeb, sb);
+				config.set_behavior(aeb, sb);
 	}
 
 	virtual const char* which() const noexcept override
@@ -25,5 +27,6 @@ private:
 	Configuration::Already_Existing_Behavior aeb;
 	Configuration::Symlinks_Behavior sb;
 };
+}
 
 #endif // BEHAVIOR_EXCEPTION_H

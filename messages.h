@@ -1,6 +1,8 @@
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
+namespace savfe
+{
 namespace MSG
 {
 	constexpr const char* NO_FILE_TO_REMOVE_SPECIFIED = "No file or directory to remove specified";
@@ -34,6 +36,8 @@ namespace MSG
 	constexpr const char* NO_LISTFILE_FOUND = "No listfile found!";
 	constexpr const char* IS_NO_VALID_BEHAVIOR_W_ARG = " is no valid behavior code!";
 	constexpr const char* INVALID_INDEXFILE = "Indexfile invalid!";
+	constexpr const char* UNABLE_TO_OPEN_FILE = "Unable to open file!";
+	constexpr const char* ELEMENTS_REMOVED_W_ARG = " elments removed!";
 }
 
 namespace LOG_MSG
@@ -42,6 +46,7 @@ namespace LOG_MSG
 	constexpr const char* UNKNOWN_PARAMETER_ERROR = "unknown parameter error";
 	constexpr const char* RUN_ERROR = "run error";
 	constexpr const char* LIST_CLEARED = "list cleared";
+}
 }
 
 #endif // MESSAGES_H

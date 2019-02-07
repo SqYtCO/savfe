@@ -10,6 +10,8 @@
 #include <algorithm>	// std::transform
 #include <cctype>		// std::tolower
 
+namespace savfe
+{
 struct Clear_Exception : public Exception
 {
 	virtual void exec() const noexcept override
@@ -23,7 +25,7 @@ struct Clear_Exception : public Exception
 		if(choice == "y" || choice == "ye" || choice == "yes")
 		{
 			std::ofstream of(FILES::LIST_NAME, std::ios::trunc);
-			log(LOG_MSG::LIST_CLEARED);
+			log(LOG_MSG::LIST_CLEARED, Log_Type::Info, Log_Output::Fileoutput);
 		}
 		else
 			std::cerr << MSG::OPERATION_CANCELED << '\n';
@@ -34,5 +36,6 @@ struct Clear_Exception : public Exception
 		return "Clear_Exception";
 	}
 };
+}
 
 #endif // CLEAR_EXCEPTION_H

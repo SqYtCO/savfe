@@ -6,6 +6,8 @@
 #include <string>
 #include <chrono>
 
+namespace savfe
+{
 /*
  * -u / --update / -R / --run
  * -v / --verbose
@@ -39,9 +41,7 @@ struct Parameter_Data
 // Behavior_Exception
 // Config_Exception
 // Parameter_Help_Exception
-//
-//
-//
 Parameter_Data analyze_parameters(const int& args, char* argv[]);
+}
 
 #endif // PARAMETERS_H

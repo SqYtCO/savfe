@@ -10,6 +10,8 @@
 #include <fstream>
 #include <string>
 
+namespace savfe
+{
 struct Log_Exception : public Exception
 {
 	virtual void exec() const noexcept override
@@ -36,7 +38,7 @@ struct Log_Exception : public Exception
 		}
 		catch(const std::exception& exc)
 		{
-			log(exc.what(), Log_Type::Error);
+			log(exc.what(), Log_Type::Error, Log_Output::File_And_Stdout);
 		}
 	}
 
@@ -45,5 +47,6 @@ struct Log_Exception : public Exception
 		return "Log_Exception";
 	}
 };
+}
 
 #endif // LOG_EXCEPTION_H

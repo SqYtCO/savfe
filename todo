@@ -23,7 +23,7 @@ general:
 	- add follow links, copy empty directory, etc.
 	- improve config
 	- add "destination" to display destination-path
-	- add "check" / "check list" implementation as parameter and input
+	- add "check" / "check list" implementation for parameter and input
 	// - add repetition (parameters: repeating, repeating_rate); replaced by cronjob
 	- redesign set-behavior in paramters (no throw)
 	- if no destination set throw error
@@ -31,6 +31,5 @@ general:
 	- improve remove_path and set_destination in order to prevent a temp. copy
 	- add options "(don't) create index file" and "read-able timestamp"
 	- set temp. file name of config/log file as constant
-
-bugs:
-	- new files in already added directory (problem in find_node())
+	- add "--config-path" option to set path of config files
+	- add support for * in paths

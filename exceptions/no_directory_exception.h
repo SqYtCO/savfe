@@ -5,6 +5,8 @@
 #include "exception.h"
 #include <iostream>
 
+namespace savfe
+{
 struct No_Directory_Exception : public Exception
 {
 	No_Directory_Exception(const std::string& not_dir) : not_dir(not_dir) {	}
@@ -22,5 +24,6 @@ struct No_Directory_Exception : public Exception
 private:
 	std::string not_dir;
 };
+}
 
 #endif // NO_DIRECTORY_EXCEPTION
