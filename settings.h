@@ -33,6 +33,8 @@ private:
     std::pair<Already_Existing_Behavior, Symlinks_Behavior> behavior;
     bool verbose;
 
+    bool reading_failed;
+
 public:
     Configuration();
     void read_configuration();

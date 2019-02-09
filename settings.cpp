@@ -130,9 +130,18 @@ int remove_not_existing_paths(const std::string& listfile, const std::string& te
 	return num;
 }
 
-Configuration::Configuration() : keep_old_indexfiles(true), behavior({ Already_Existing_Behavior::Rename_Existing, Symlinks_Behavior::Follow_Symlinks }), verbose(true)
+Configuration::Configuration() : keep_old_indexfiles(true), behavior({ Already_Existing_Behavior::Rename_Existing,
+																	 Symlinks_Behavior::Follow_Symlinks }),
+									verbose(true), reading_failed(false)
 {
-	read_configuration();
+	try
+	{
+		read_configuration();
+	}
+	catch(const Exception&)
+	{
+		reading_failed = true;
+	}
 }
 
 void Configuration::read_configuration()
@@ -175,7 +184,12 @@ void Configuration::read_configuration()
 		}
 	}
 	else
+	{
+		reading_failed = true;
 		throw Error_Exception(MSG::NO_CONFIGFILE_FOUND);
+	}
+
+	reading_failed = false;
 }
 
 void Configuration::write_configuration()
