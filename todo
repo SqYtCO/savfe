@@ -1,35 +1,13 @@
-settings.cpp:
-	- remove_path
-		-> add possibility to remove non-existing paths (?)
-
-check_exception.h:
-	- add check_list() and check_destination()
-
-invalid_behavior_exception.h:
-	- add exec()
-
-invalid_parameter_exception.h:
-	- Invalid_Parameter_Exception::exec requires new quit-mechanism (without Quit_Exception)
-
-run.cpp:
-	- implement ignore list algorithm
-
 general:
 	- input: destination
 	- settings file
 	- commando line options
-	- run()
-	- add "*" in paths
-	- add follow links, copy empty directory, etc.
+	- add follow links
 	- improve config
-	- add "destination" to display destination-path
-	- add "check" / "check list" implementation for parameter and input
-	// - add repetition (parameters: repeating, repeating_rate); replaced by cronjob
-	- redesign set-behavior in paramters (no throw)
-	- if no destination set throw error
-	- if destination file throw error
-	- improve remove_path and set_destination in order to prevent a temp. copy
+	- improve remove_path and set_destination in order to prevent temp. copies
 	- add options "(don't) create index file" and "read-able timestamp"
 	- set temp. file name of config/log file as constant
 	- add "--config-path" option to set path of config files
 	- add support for * in paths
+	- remove behavior settings
+	- change program design (no exceptions)
