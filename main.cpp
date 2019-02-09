@@ -60,6 +60,7 @@ int main(int args, char* argv[])
 		{
 			savfe::log(savfe::MSG::FATALE_RUNNING_ERROR, savfe::Log_Type::Fatale_Error, savfe::Log_Output::Stdout);
 			savfe::log(savfe::LOG_MSG::RUN_ERROR, savfe::Log_Type::Fatale_Error, savfe::Log_Output::Fileoutput);
+			return -2;
 		}
 	}
 	if(params.terminal)
@@ -80,6 +81,7 @@ int main(int args, char* argv[])
 		{
 			savfe::log(savfe::MSG::FATALE_TERMINAL_ERROR, savfe::Log_Type::Fatale_Error, savfe::Log_Output::Stdout);
 			savfe::log(savfe::LOG_MSG::UNKNOWN_TERMINAL_ERROR, savfe::Log_Type::Fatale_Error, savfe::Log_Output::Fileoutput);
+			return -3;
 		}
 	}
 
